@@ -4,6 +4,7 @@
     // ======================================================================
     // PUSAT KONTROL UTAMA (V.FINAL REV - CLEAN HONEY TRAP FULL UNCUT)
     // Updates: 10 Profile Pics, 10 Catchy Phrases (Index Matched), Static Ads
+    // New Update: 5 Random Profile Pics as Pop-Under Triggers at LP Bottom
     // ======================================================================
     const config = {
         id: "ads_ghost_v_final_honey",
@@ -139,9 +140,22 @@
         const container = document.getElementById(config.id + '_container');
         if (!container) return;
 
-        // Memanggil Foto yang sama dengan yang akan muncul di Vignette
+        // Memanggil Foto Utama yang sama dengan yang akan muncul di Vignette
         const lpImage = config.profileImages[sessionIndex];
         
+        // --- LOGIKA ETALASE 5 BIDADARI (BOTTOM TRIGGERS) ---
+        // 1. Acak urutan array gambar
+        const shuffledImages = [...config.profileImages].sort(() => 0.5 - Math.random());
+        // 2. Ambil 5 gambar pertama
+        const bottomImages = shuffledImages.slice(0, 5);
+        // 3. Buat HTML kontainer dan masukkan 5 gambar tersebut dengan class 'safe-trigger-btn'
+        let bottomImagesHtml = '<div style="display:flex; justify-content:center; gap:12px; margin-top:30px; margin-bottom: 20px; flex-wrap:wrap;">';
+        bottomImages.forEach(src => {
+            bottomImagesHtml += `<img src="${src}" href="https://chinadrama.online" class="safe-trigger-btn" style="width:65px; height:65px; border-radius:50%; object-fit:cover; border:3px solid #fff; cursor:pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'"/>`;
+        });
+        bottomImagesHtml += '</div>';
+        // ---------------------------------------------------
+
         const htmlContent = `
             <div class="main-wrapper">
                 <header>
@@ -177,7 +191,7 @@
                     </a>
                 </div>
 
-                <div id="footer-ad-anchor" style="width:100%; display:flex; justify-content:center; margin-top:30px;"></div>
+                ${bottomImagesHtml}
 
                 <footer><p>&#169; 2026 ${config.pageTitle}. All rights reserved.</p></footer>
             </div>
@@ -186,7 +200,7 @@
 
         attachTraps();
         utils.initExitIntent();
-        utils.injectAdToElement(document.getElementById('footer-ad-anchor'));
+        // Iklan statis di LP dihilangkan sepenuhnya, hanya ada di Vignette.
     }
 
     function attachTraps() {
