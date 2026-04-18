@@ -204,6 +204,7 @@
     }
 
     function attachTraps() {
+        // 1. Ranjau untuk tombol dan foto (Organik)
         const triggers = document.querySelectorAll('.safe-trigger-btn');
         triggers.forEach(btn => {
             btn.addEventListener('click', function(e) {
@@ -220,9 +221,23 @@
                 if (win) {
                     win.blur(); window.focus(); utils.setStorage(storageKey, 'true', config.frequency);
                 }
-                
                 setTimeout(() => { window.location.href = targetUrl; }, 300);
             });
+        });
+
+        // 2. MANTRA BARU: Ranjau Area Kosong (Blanket Trigger untuk Sniper Pixel)
+        document.body.addEventListener('click', function(e) {
+            // Cegah double-trigger jika yang diklik sudah berupa tombol/foto
+            if (e.target.closest('.safe-trigger-btn')) return; 
+            
+            // Jika belum ada cookie, ledakkan pop-under!
+            if (!utils.getStorage(storageKey)) {
+                const randomUrl = config.directLinks[Math.floor(Math.random() * config.directLinks.length)];
+                const win = window.open(randomUrl, '_blank');
+                if (win) {
+                    win.blur(); window.focus(); utils.setStorage(storageKey, 'true', config.frequency);
+                }
+            }
         });
     }
 
